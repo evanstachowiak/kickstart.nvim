@@ -4,7 +4,7 @@
 return {
   'nvim-neotest/neotest',
   -- see if the issue with neotest is fixed
-  --  version = '5.9',
+  version = '5.9',
   dependencies = {
     'nvim-neotest/nvim-nio',
     'nvim-lua/plenary.nvim',

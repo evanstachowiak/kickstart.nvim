@@ -166,6 +166,9 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Set shiftwidth to two
+vim.o.shiftwidth = 2
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -359,122 +362,139 @@ require('lazy').setup({
   --
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
-  { -- Fuzzy Finder (files, lsp, etc)
-    'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      { -- If encountering errors, see telescope-fzf-native README for installation instructions
-        'nvim-telescope/telescope-fzf-native.nvim',
-
-        -- `build` is used to run some command when the plugin is installed/updated.
-        -- This is only run then, not every time Neovim starts up.
-        build = 'make',
-
-        -- `cond` is a condition used to determine whether this plugin should be
-        -- installed and loaded.
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
-      { 'nvim-telescope/telescope-ui-select.nvim' },
-
-      -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
-    },
-    config = function()
-      -- Telescope is a fuzzy finder that comes with a lot of different things that
-      -- it can fuzzy find! It's more than just a "file finder", it can search
-      -- many different aspects of Neovim, your workspace, LSP, and more!
-      --
-      -- The easiest way to use Telescope, is to start by doing something like:
-      --  :Telescope help_tags
-      --
-      -- After running this command, a window will open up and you're able to
-      -- type in the prompt window. You'll see a list of `help_tags` options and
-      -- a corresponding preview of the help.
-      --
-      -- Two important keymaps to use while in Telescope are:
-      --  - Insert mode: <c-/>
-      --  - Normal mode: ?
-      --
-      -- This opens a window that shows you all of the keymaps for the current
-      -- Telescope picker. This is really useful to discover what Telescope can
-      -- do as well as how to actually do it!
-
-      -- [[ Configure Telescope ]]
-      -- See `:help telescope` and `:help telescope.setup()`
-      require('telescope').setup {
-        -- You can put your default mappings / updates / etc. in here
-        --  All the info you're looking for is in `:help telescope.setup()`
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        pickers = {
-          find_files = {
-            hidden = true,
-            -- find_command = {
-            --   'fd',
-            --   '--type',
-            --   'f',
-            --   '--no-ignore-vcs',
-            --   '--color=never',
-            --   '--hidden',
-            --   '--follow',
-            -- },
-          },
-        },
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
-          },
-        },
-      }
-
-      -- Enable Telescope extensions if they are installed
-      pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
-
-      -- See `:help telescope.builtin`
-      local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
-      -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
-
-      -- It's also possible to pass additional configuration options.
-      --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>s/', function()
-        builtin.live_grep {
-          grep_open_files = true,
-          prompt_title = 'Live Grep in Open Files',
-        }
-      end, { desc = '[S]earch [/] in Open Files' })
-
-      -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
-    end,
-  },
+  -- { -- Fuzzy Finder (files, lsp, etc)
+  --   'nvim-telescope/telescope.nvim',
+  --   event = 'VimEnter',
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     { -- If encountering errors, see telescope-fzf-native README for installation instructions
+  --       'nvim-telescope/telescope-fzf-native.nvim',
+  --
+  --       -- `build` is used to run some command when the plugin is installed/updated.
+  --       -- This is only run then, not every time Neovim starts up.
+  --       build = 'make',
+  --
+  --       -- `cond` is a condition used to determine whether this plugin should be
+  --       -- installed and loaded.
+  --       cond = function()
+  --         return vim.fn.executable 'make' == 1
+  --       end,
+  --     },
+  --     { 'nvim-telescope/telescope-ui-select.nvim' },
+  --
+  --     -- Useful for getting pretty icons, but requires a Nerd Font.
+  --     { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+  --     {
+  --       'nvim-telescope/telescope-live-grep-args.nvim',
+  --       -- This will not install any breaking changes.
+  --       -- For major updates, this must be adjusted manually.
+  --       version = '^1.0.0',
+  --     },
+  --   },
+  --   config = function()
+  --     -- Telescope is a fuzzy finder that comes with a lot of different things that
+  --     -- it can fuzzy find! It's more than just a "file finder", it can search
+  --     -- many different aspects of Neovim, your workspace, LSP, and more!
+  --     --
+  --     -- The easiest way to use Telescope, is to start by doing something like:
+  --     --  :Telescope help_tags
+  --     --
+  --     -- After running this command, a window will open up and you're able to
+  --     -- type in the prompt window. You'll see a list of `help_tags` options and
+  --     -- a corresponding preview of the help.
+  --     --
+  --     -- Two important keymaps to use while in Telescope are:
+  --     --  - Insert mode: <c-/>
+  --     --  - Normal mode: ?
+  --     --
+  --     -- This opens a window that shows you all of the keymaps for the current
+  --     -- Telescope picker. This is really useful to discover what Telescope can
+  --     -- do as well as how to actually do it!
+  --
+  --     -- [[ Configure Telescope ]]
+  --     -- See `:help telescope` and `:help telescope.setup()`
+  --     require('telescope').setup {
+  --       -- You can put your default mappings / updates / etc. in here
+  --       --  All the info you're looking for is in `:help telescope.setup()`
+  --       --
+  --       -- defaults = {
+  --       --   mappings = {
+  --       --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+  --       --   },
+  --       -- },
+  --       pickers = {
+  --         live_grep = {
+  --           additional_args = function(_)
+  --             return { '--hidden' }
+  --           end,
+  --         },
+  --         grep_string = {
+  --           additional_args = function(_)
+  --             return { '--hidden' }
+  --           end,
+  --         },
+  --         find_files = {
+  --           hidden = true,
+  --           -- find_command = {
+  --           --   'fd',
+  --           --   '--type',
+  --           --   'f',
+  --           --   '--no-ignore-vcs',
+  --           --   '--color=never',
+  --           --   '--hidden',
+  --           --   '--follow',
+  --           -- },
+  --         },
+  --       },
+  --       extensions = {
+  --         ['ui-select'] = {
+  --           require('telescope.themes').get_dropdown(),
+  --         },
+  --       },
+  --     }
+  --
+  --     -- Enable Telescope extensions if they are installed
+  --     pcall(require('telescope').load_extension, 'fzf')
+  --     pcall(require('telescope').load_extension, 'ui-select')
+  --     pcall(require('telescope').load_extension, 'live_grep_args')
+  --
+  --     -- See `:help telescope.builtin`
+  --     local builtin = require 'telescope.builtin'
+  --     vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+  --     vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+  --     vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+  --     vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+  --     vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+  --     vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+  --     vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+  --     vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+  --     vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+  --     vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+  --
+  --     -- Slightly advanced example of overriding default behavior and theme
+  --     vim.keymap.set('n', '<leader>/', function()
+  --       -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+  --       builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+  --         winblend = 10,
+  --         previewer = false,
+  --       })
+  --     end, { desc = '[/] Fuzzily search in current buffer' })
+  --
+  --     -- It's also possible to pass additional configuration options.
+  --     --  See `:help telescope.builtin.live_grep()` for information about particular keys
+  --     vim.keymap.set('n', '<leader>s/', function()
+  --       builtin.live_grep {
+  --         grep_open_files = true,
+  --         prompt_title = 'Live Grep in Open Files',
+  --       }
+  --     end, { desc = '[S]earch [/] in Open Files' })
+  --
+  --     -- Shortcut for searching your Neovim configuration files
+  --     vim.keymap.set('n', '<leader>sn', function()
+  --       builtin.find_files { cwd = vim.fn.stdpath 'config' }
+  --     end, { desc = '[S]earch [N]eovim files' })
+  --   end,
+  -- },
 
   -- LSP Plugins
   {
@@ -696,6 +716,8 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
+        gh_actions_ls = {},
+        vtsls = {},
         --
 
         lua_ls = {
@@ -710,6 +732,100 @@ require('lazy').setup({
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
+          },
+        },
+
+        yamlls = {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          settings = {
+            yaml = {
+              completion = true,
+              customTags = {
+                '!fn',
+                '!And',
+                '!If',
+                '!Not',
+                '!Equals',
+                '!Or',
+                '!FindInMap sequence',
+                '!Base64',
+                '!Cidr',
+                '!Ref',
+                '!Ref Scalar',
+                '!Sub',
+                '!GetAtt',
+                '!GetAZs',
+                '!ImportValue',
+                '!Select',
+                '!Split',
+                '!Join sequence',
+              },
+              enabled = true,
+              enabledForFilesGlob = '*.{yaml,yml,template}',
+              format = {
+                enable = true,
+                singleQuote = true,
+              },
+              hover = true,
+              schemaStore = {
+                enable = true,
+              },
+              -- schemaStore = {
+              --   url = 'https://www.schemastore.org/api/json/catalog.json',
+              --   enable = true,
+              -- },
+              -- schemas = require('schemastore').yaml.schemas(),
+              --   schemaStore = {
+              --     -- You must disable built-in schemaStore support if you want to use
+              --     -- this plugin and its advanced options like `ignore`.
+              --     enable = false,
+              --     -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+              --     url = '',
+              --   },
+              --   validate = true,
+              -- },
+            },
+            -- cmd = { '~/.local/share/nvim/mason/bin/yaml-language-server', '--stdio' },
+            -- settings = {
+            --   yaml = {
+            --     completion = true,
+            --     customTags = {
+            --       '!fn',
+            --       '!And',
+            --       '!If',
+            --       '!Not',
+            --       '!Equals',
+            --       '!Or',
+            --       '!FindInMap sequence',
+            --       '!Base64',
+            --       '!Cidr',
+            --       '!Ref',
+            --       '!Ref Scalar',
+            --       '!Sub',
+            --       '!GetAtt',
+            --       '!GetAZs',
+            --       '!ImportValue',
+            --       '!Select',
+            --       '!Split',
+            --       '!Join sequence',
+            --     },
+            --     format = {
+            --       enable = true,
+            --       singleQuote = true,
+            --     },
+            --     hover = true,
+            --     schemas = require('schemastore').yaml.schemas(),
+            --     schemaStore = {
+            --       -- You must disable built-in schemaStore support if you want to use
+            --       -- this plugin and its advanced options like `ignore`.
+            --       enable = false,
+            --       -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+            --       url = '',
+            --     },
+            --     validate = true,
+            --   },
+            -- },
           },
         },
       }
@@ -773,7 +889,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, javascript = true, typescript = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -790,8 +906,8 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
-        json = { { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier' } },
+        json = { 'prettierd', 'prettier' },
+        typescript = { 'prettierd', 'prettier' },
       },
     },
   },
@@ -866,9 +982,16 @@ require('lazy').setup({
       },
 
       completion = {
+        accept = { auto_brackets = { enabled = true } },
+
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 250,
+          treesitter_highlighting = true,
+          window = { border = 'rounded' },
+        },
       },
 
       sources = {
@@ -962,7 +1085,7 @@ require('lazy').setup({
     install = { compilers = { 'clang', 'gcc' } },
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'yaml' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -972,7 +1095,8 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = false, disable = { 'ruby' } },
+      indent = { enable = false },
+      -- indent = { enable = false, disable = { 'ruby' } },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -996,7 +1120,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
