@@ -413,7 +413,7 @@ return {
       function()
         Snacks.picker.gh_pr { author = 'evanstachowiak' }
       end,
-      desc = 'GitHub Pull Requests (open)',
+      desc = 'GitHub Pull Requests (open) evanstachowiak',
     },
     {
       '<leader>gP',
